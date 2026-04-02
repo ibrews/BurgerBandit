@@ -146,7 +146,7 @@ class PlayerNode: SKNode {
         physicsBody = SKPhysicsBody(circleOfRadius: GameState.shared.playerCollisionRadius())
         physicsBody?.categoryBitMask = PhysicsCategory.player
         physicsBody?.contactTestBitMask = PhysicsCategory.food | PhysicsCategory.guard_ | PhysicsCategory.door
-        physicsBody?.collisionBitMask = PhysicsCategory.wall | PhysicsCategory.counter | PhysicsCategory.guard_
+        physicsBody?.collisionBitMask = PhysicsCategory.wall | PhysicsCategory.counter
         physicsBody?.allowsRotation = false
         physicsBody?.restitution = 0
         physicsBody?.friction = 0.5

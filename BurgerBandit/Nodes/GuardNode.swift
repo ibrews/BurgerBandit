@@ -8,10 +8,17 @@ class GuardNode: SKNode {
     var patrolPath: [CGPoint]
     private var patrolIndex: Int = 0
     private(set) var isChasing: Bool = false
-    private var isStunned: Bool = false
+    private var stunTimer: TimeInterval = 0
     private var bodyNode: SKShapeNode!
     private var headNode: SKShapeNode!
     private var alertNode: SKNode!
+    private var facingAngle: CGFloat = 0
+
+    // Play area bounds — set by GameScene after construction
+    static let boundsMinX: CGFloat = -380
+    static let boundsMaxX: CGFloat = 376
+    static let boundsMinY: CGFloat = -145
+    static let boundsMaxY: CGFloat = 140
 
     init(uniformColor: UIColor, moveSpeed: CGFloat, chaseDistance: CGFloat, patrolPath: [CGPoint]) {
         self.uniformColor = uniformColor
@@ -110,7 +117,6 @@ class GuardNode: SKNode {
     }
 
     private func addAngryEyebrows() {
-        // Left eyebrow (angled inward = angry)
         let lbrow = UIBezierPath()
         lbrow.move(to: CGPoint(x: -9, y: 8))
         lbrow.addLine(to: CGPoint(x: -2, y: 11))
@@ -134,13 +140,11 @@ class GuardNode: SKNode {
 
     private func buildAlertNode() -> SKNode {
         let container = SKNode()
-        // Background bubble
         let bubble = SKShapeNode(circleOfRadius: 14)
         bubble.fillColor = UIColor(red: 1.0, green: 0.95, blue: 0.2, alpha: 1)
         bubble.strokeColor = .black
         bubble.lineWidth = 2.5
         container.addChild(bubble)
-        // Exclamation mark
         let exclaim = SKLabelNode(text: "!")
         exclaim.fontName = "AvenirNext-Heavy"
         exclaim.fontSize = 18
@@ -152,21 +156,21 @@ class GuardNode: SKNode {
     }
 
     private func setupPhysics() {
+        // Contact-only physics — no collision response, movement is manual
         physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 30, height: 30))
         physicsBody?.categoryBitMask = PhysicsCategory.guard_
         physicsBody?.contactTestBitMask = PhysicsCategory.player
-        physicsBody?.collisionBitMask = PhysicsCategory.wall | PhysicsCategory.counter | PhysicsCategory.player
+        physicsBody?.collisionBitMask = PhysicsCategory.none  // no physics collision
+        physicsBody?.isDynamic = true
         physicsBody?.allowsRotation = false
-        physicsBody?.restitution = 0.3
-        physicsBody?.friction = 0.5
-        physicsBody?.linearDamping = 10.0
-        physicsBody?.mass = 2.0
+        physicsBody?.affectedByGravity = false
     }
 
     // Called every frame from GameScene
     func update(playerPosition: CGPoint, dt: TimeInterval) {
-        guard !isStunned else {
-            physicsBody?.velocity = .zero
+        // Stun countdown
+        if stunTimer > 0 {
+            stunTimer -= dt
             return
         }
 
@@ -180,7 +184,6 @@ class GuardNode: SKNode {
         if isChasing != wasChasing {
             alertNode.isHidden = !isChasing
             if isChasing {
-                // Alert pop animation
                 alertNode.setScale(0)
                 alertNode.run(SKAction.sequence([
                     SKAction.scale(to: 1.3, duration: 0.1),
@@ -190,27 +193,30 @@ class GuardNode: SKNode {
         }
 
         if isChasing {
-            moveToward(target: playerPosition, dist: dist, dt: dt)
+            moveToward(playerPosition: playerPosition, dist: dist, dt: dt)
         } else {
             patrol(dt: dt)
         }
+
+        clampToBounds()
     }
 
-    private func moveToward(target: CGPoint, dist: CGFloat, dt: TimeInterval) {
-        guard dist > 20 else {
-            // Close enough — stop pushing, hold position
-            physicsBody?.velocity = .zero
-            return
-        }
-        let dx = target.x - position.x
-        let dy = target.y - position.y
+    private func moveToward(playerPosition: CGPoint, dist: CGFloat, dt: TimeInterval) {
+        // Don't push into the player — stop at contact distance
+        guard dist > 40 else { return }
+
+        let dx = playerPosition.x - position.x
+        let dy = playerPosition.y - position.y
         let nx = dx / dist
         let ny = dy / dist
-        physicsBody?.velocity = CGVector(dx: nx * moveSpeed * 60, dy: ny * moveSpeed * 60)
-        // Smooth rotation toward movement direction
+        let step = moveSpeed * CGFloat(dt) * 60
+        position.x += nx * step
+        position.y += ny * step
+
+        // Smooth rotation
         let targetAngle = atan2(ny, nx) - .pi / 2
-        let angleDiff = shortestAngleDiff(from: zRotation, to: targetAngle)
-        zRotation += angleDiff * min(CGFloat(dt) * 10, 1.0)
+        facingAngle = lerpAngle(from: facingAngle, to: targetAngle, t: min(CGFloat(dt) * 8, 1.0))
+        zRotation = facingAngle
     }
 
     private func patrol(dt: TimeInterval) {
@@ -220,47 +226,43 @@ class GuardNode: SKNode {
         let dy = target.y - position.y
         let dist = sqrt(dx * dx + dy * dy)
 
-        if dist < 8 {
+        if dist < 10 {
             patrolIndex = (patrolIndex + 1) % patrolPath.count
             return
         }
 
         let nx = dx / dist
         let ny = dy / dist
-        let patrolSpeed = moveSpeed * 0.55
-        physicsBody?.velocity = CGVector(dx: nx * patrolSpeed * 60, dy: ny * patrolSpeed * 60)
+        let step = moveSpeed * 0.55 * CGFloat(dt) * 60
+        position.x += nx * step
+        position.y += ny * step
+
         let targetAngle = atan2(ny, nx) - .pi / 2
-        let angleDiff = shortestAngleDiff(from: zRotation, to: targetAngle)
-        zRotation += angleDiff * min(CGFloat(dt) * 10, 1.0)
+        facingAngle = lerpAngle(from: facingAngle, to: targetAngle, t: min(CGFloat(dt) * 8, 1.0))
+        zRotation = facingAngle
     }
 
-    private func shortestAngleDiff(from a: CGFloat, to b: CGFloat) -> CGFloat {
+    private func clampToBounds() {
+        position.x = max(GuardNode.boundsMinX, min(GuardNode.boundsMaxX, position.x))
+        position.y = max(GuardNode.boundsMinY, min(GuardNode.boundsMaxY, position.y))
+    }
+
+    private func lerpAngle(from a: CGFloat, to b: CGFloat, t: CGFloat) -> CGFloat {
         var diff = b - a
         while diff > .pi { diff -= 2 * .pi }
         while diff < -.pi { diff += 2 * .pi }
-        return diff
+        return a + diff * t
     }
 
-    // Called when guard catches player — stun and push back
+    // Called when guard catches player — stun in place
     func recoilFromPlayer() {
-        isStunned = true
-        physicsBody?.velocity = .zero
+        stunTimer = 1.5
+        // Brief visual feedback
+        let flash = SKAction.sequence([
+            SKAction.scale(to: 1.15, duration: 0.08),
+            SKAction.scale(to: 1.0, duration: 0.08)
+        ])
+        run(flash)
         alertNode.isHidden = true
-
-        // Push guard away from current position (backward from facing)
-        let pushDist: CGFloat = 80
-        let pushDir = zRotation + .pi / 2 + .pi  // reverse of facing
-        let pushX = cos(pushDir) * pushDist
-        let pushY = sin(pushDir) * pushDist
-
-        run(SKAction.sequence([
-            SKAction.group([
-                SKAction.scale(to: 1.2, duration: 0.1),
-                SKAction.moveBy(x: pushX, y: pushY, duration: 0.25)
-            ]),
-            SKAction.scale(to: 1.0, duration: 0.1),
-            SKAction.wait(forDuration: 1.2),
-            SKAction.run { [weak self] in self?.isStunned = false }
-        ]))
     }
 }

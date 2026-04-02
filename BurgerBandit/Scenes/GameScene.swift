@@ -259,6 +259,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Player movement from joystick
         updatePlayerMovement(dt: dt)
 
+        // Clamp player to play area
+        player.position.x = max(-380, min(376, player.position.x))
+        player.position.y = max(-145, min(140, player.position.y))
+
         // Guard AI + chase music
         var chasing = false
         for guard_ in guards {
