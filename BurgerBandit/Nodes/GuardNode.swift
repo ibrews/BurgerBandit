@@ -155,11 +155,12 @@ class GuardNode: SKNode {
         physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 30, height: 30))
         physicsBody?.categoryBitMask = PhysicsCategory.guard_
         physicsBody?.contactTestBitMask = PhysicsCategory.player
-        physicsBody?.collisionBitMask = PhysicsCategory.wall | PhysicsCategory.counter
+        physicsBody?.collisionBitMask = PhysicsCategory.wall | PhysicsCategory.counter | PhysicsCategory.player
         physicsBody?.allowsRotation = false
-        physicsBody?.restitution = 0
+        physicsBody?.restitution = 0.3
         physicsBody?.friction = 0.5
         physicsBody?.linearDamping = 10.0
+        physicsBody?.mass = 2.0
     }
 
     // Called every frame from GameScene
@@ -196,14 +197,20 @@ class GuardNode: SKNode {
     }
 
     private func moveToward(target: CGPoint, dist: CGFloat, dt: TimeInterval) {
-        guard dist > 5 else { return }
+        guard dist > 20 else {
+            // Close enough — stop pushing, hold position
+            physicsBody?.velocity = .zero
+            return
+        }
         let dx = target.x - position.x
         let dy = target.y - position.y
         let nx = dx / dist
         let ny = dy / dist
         physicsBody?.velocity = CGVector(dx: nx * moveSpeed * 60, dy: ny * moveSpeed * 60)
-        // Face movement direction
-        zRotation = atan2(ny, nx) - .pi / 2
+        // Smooth rotation toward movement direction
+        let targetAngle = atan2(ny, nx) - .pi / 2
+        let angleDiff = shortestAngleDiff(from: zRotation, to: targetAngle)
+        zRotation += angleDiff * min(CGFloat(dt) * 10, 1.0)
     }
 
     private func patrol(dt: TimeInterval) {
@@ -222,7 +229,16 @@ class GuardNode: SKNode {
         let ny = dy / dist
         let patrolSpeed = moveSpeed * 0.55
         physicsBody?.velocity = CGVector(dx: nx * patrolSpeed * 60, dy: ny * patrolSpeed * 60)
-        zRotation = atan2(ny, nx) - .pi / 2
+        let targetAngle = atan2(ny, nx) - .pi / 2
+        let angleDiff = shortestAngleDiff(from: zRotation, to: targetAngle)
+        zRotation += angleDiff * min(CGFloat(dt) * 10, 1.0)
+    }
+
+    private func shortestAngleDiff(from a: CGFloat, to b: CGFloat) -> CGFloat {
+        var diff = b - a
+        while diff > .pi { diff -= 2 * .pi }
+        while diff < -.pi { diff += 2 * .pi }
+        return diff
     }
 
     // Called when guard catches player — stun and push back
