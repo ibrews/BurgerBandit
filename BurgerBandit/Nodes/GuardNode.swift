@@ -8,6 +8,7 @@ class GuardNode: SKNode {
     var patrolPath: [CGPoint]
     private var patrolIndex: Int = 0
     private(set) var isChasing: Bool = false
+    private var isStunned: Bool = false
     private var bodyNode: SKShapeNode!
     private var headNode: SKShapeNode!
     private var alertNode: SKNode!
@@ -163,6 +164,11 @@ class GuardNode: SKNode {
 
     // Called every frame from GameScene
     func update(playerPosition: CGPoint, dt: TimeInterval) {
+        guard !isStunned else {
+            physicsBody?.velocity = .zero
+            return
+        }
+
         let dx = playerPosition.x - position.x
         let dy = playerPosition.y - position.y
         let dist = sqrt(dx * dx + dy * dy)
@@ -219,14 +225,26 @@ class GuardNode: SKNode {
         zRotation = atan2(ny, nx) - .pi / 2
     }
 
-    // Called when guard catches player — back off briefly
+    // Called when guard catches player — stun and push back
     func recoilFromPlayer() {
+        isStunned = true
         physicsBody?.velocity = .zero
-        let wait = SKAction.wait(forDuration: 0.8)
+        alertNode.isHidden = true
+
+        // Push guard away from current position (backward from facing)
+        let pushDist: CGFloat = 80
+        let pushDir = zRotation + .pi / 2 + .pi  // reverse of facing
+        let pushX = cos(pushDir) * pushDist
+        let pushY = sin(pushDir) * pushDist
+
         run(SKAction.sequence([
-            SKAction.scale(to: 1.2, duration: 0.1),
+            SKAction.group([
+                SKAction.scale(to: 1.2, duration: 0.1),
+                SKAction.moveBy(x: pushX, y: pushY, duration: 0.25)
+            ]),
             SKAction.scale(to: 1.0, duration: 0.1),
-            wait
+            SKAction.wait(forDuration: 1.2),
+            SKAction.run { [weak self] in self?.isStunned = false }
         ]))
     }
 }
