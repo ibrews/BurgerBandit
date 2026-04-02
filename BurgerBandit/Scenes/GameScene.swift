@@ -263,11 +263,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player.position.x = max(-380, min(376, player.position.x))
         player.position.y = max(-145, min(140, player.position.y))
 
-        // Guard AI + chase music
+        // Guard AI + chase music + distance-based catch detection
         var chasing = false
         for guard_ in guards {
             guard_.update(playerPosition: player.position, dt: dt)
             if guard_.isChasing { chasing = true }
+
+            // Distance-based guard catch (replaces physics contact)
+            if guard_.stunTimer <= 0 && guard_.distanceTo(player.position) < GuardNode.catchRadius {
+                handleGuardCatch(guard_)
+            }
         }
         if chasing != anyGuardChasing {
             anyGuardChasing = chasing
@@ -374,14 +379,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
 
-        // Player touches guard
-        if (a == PhysicsCategory.player && b == PhysicsCategory.guard_) ||
-           (a == PhysicsCategory.guard_ && b == PhysicsCategory.player) {
-            let guardBody = a == PhysicsCategory.guard_ ? contact.bodyA : contact.bodyB
-            if let guardNode = guardBody.node as? GuardNode {
-                handleGuardCatch(guardNode)
-            }
-        }
+        // Guard catch is now distance-based in update() — no physics contact needed
 
         // Player touches door
         if (a == PhysicsCategory.player && b == PhysicsCategory.door) ||
@@ -817,7 +815,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.isJumping = false
             self.player.zPosition = originalZ
             // Restore collision and contact
-            self.player.physicsBody?.contactTestBitMask = PhysicsCategory.food | PhysicsCategory.guard_ | PhysicsCategory.door
+            self.player.physicsBody?.contactTestBitMask = PhysicsCategory.food | PhysicsCategory.door
             self.player.physicsBody?.collisionBitMask = PhysicsCategory.wall | PhysicsCategory.counter
             // Kill velocity on landing so player doesn't slide into walls
             self.player.physicsBody?.velocity = .zero

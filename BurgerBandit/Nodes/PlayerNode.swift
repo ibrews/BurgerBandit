@@ -145,7 +145,7 @@ class PlayerNode: SKNode {
         // Physics body uses separate collision radius — smaller to avoid getting wedged
         physicsBody = SKPhysicsBody(circleOfRadius: GameState.shared.playerCollisionRadius())
         physicsBody?.categoryBitMask = PhysicsCategory.player
-        physicsBody?.contactTestBitMask = PhysicsCategory.food | PhysicsCategory.guard_ | PhysicsCategory.door
+        physicsBody?.contactTestBitMask = PhysicsCategory.food | PhysicsCategory.door
         physicsBody?.collisionBitMask = PhysicsCategory.wall | PhysicsCategory.counter
         physicsBody?.allowsRotation = false
         physicsBody?.restitution = 0
