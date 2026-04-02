@@ -23,9 +23,9 @@ enum Difficulty: String, CaseIterable {
 
     var guardBaseSpeed: CGFloat {
         switch self {
-        case .easy:   return 65
-        case .medium: return 90
-        case .hard:   return 125
+        case .easy:   return 120
+        case .medium: return 160
+        case .hard:   return 200
         }
     }
 

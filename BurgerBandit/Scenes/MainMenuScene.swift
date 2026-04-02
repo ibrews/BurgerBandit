@@ -11,6 +11,7 @@ class MainMenuScene: SKScene {
     override func didMove(to view: SKView) {
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         backgroundColor = UIColor(red: 0.08, green: 0.07, blue: 0.06, alpha: 1)
+
         buildBackground()
         buildTitle()
         buildBouncingBurger()

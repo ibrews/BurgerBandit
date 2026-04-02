@@ -193,7 +193,7 @@ class GuardNode: SKNode {
         let dy = playerPosition.y - position.y
         let nx = dx / dist
         let ny = dy / dist
-        let step = moveSpeed * CGFloat(dt) * 60
+        let step = moveSpeed * CGFloat(dt)
         position.x += nx * step
         position.y += ny * step
 
@@ -214,7 +214,7 @@ class GuardNode: SKNode {
 
         let nx = dx / dist
         let ny = dy / dist
-        let step = moveSpeed * 0.55 * CGFloat(dt) * 60
+        let step = moveSpeed * 0.55 * CGFloat(dt)
         position.x += nx * step
         position.y += ny * step
 
