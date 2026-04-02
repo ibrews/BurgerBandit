@@ -1,0 +1,401 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		046672E97A375AD83B530F16 /* GuardNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95BB49C552C053417E58FC0 /* GuardNode.swift */; };
+		077F858D66C9F6D61C4D5A51 /* FoodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA11AB615AD14A36979AFA2 /* FoodType.swift */; };
+		0923D840F6E9AE9779D57DF5 /* HighScoreScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12849E6B13142B777C193818 /* HighScoreScene.swift */; };
+		0E365A13758AE9CB1E690D80 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C3B1FBED58E7734FA8056 /* GameScene.swift */; };
+		1CD9AE25C95262CEC9FC4A8B /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7909F4126839B935DF8B9F1 /* GameViewController.swift */; };
+		22721B04B1B9285BD935B1F9 /* FoodNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F2799AA1B68B99E72CE22F /* FoodNode.swift */; };
+		2DA031EFF4F8F5AE2C99A139 /* Restaurant.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54825A21722AFE4E7249408 /* Restaurant.swift */; };
+		360C65B9FDC9114DDD09C2AB /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80840C0B2A2AC329ACBA3661 /* GameOverScene.swift */; };
+		3E5734675F6007235A930694 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE16A23B42634FAB6A989AF /* GameState.swift */; };
+		581D4D3E07439AF1065A47A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97B595D8430503D6DD0E3944 /* Assets.xcassets */; };
+		7DF7423CD37774F33E8C1CA8 /* PhysicsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169EF2FC678D0A82EAD61F6F /* PhysicsCategory.swift */; };
+		8B684A7E472AB7996AE50CA0 /* HighScoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3FDD01711BEDE1C37F3E01 /* HighScoreManager.swift */; };
+		9051EC7C8930184E192E8DFB /* MainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A563EFBC8B48D79741B263 /* MainMenuScene.swift */; };
+		AC78B4057C80B3A8FA275DB5 /* PlayerNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3626BB1E63B0F6ED6DCCE7 /* PlayerNode.swift */; };
+		B0F42417B6671B853070FF8B /* HUDNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFD15C2DCD696FD530FDE31 /* HUDNode.swift */; };
+		C6BD9FD7477706BF33305E25 /* MusicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A530478CA04EEC2EA79C52DC /* MusicManager.swift */; };
+		C8842350C7E870D9B73C37DF /* BurgerBanditApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99152FF9B434C27F1FA718 /* BurgerBanditApp.swift */; };
+		D84593CED115DC2F701E617B /* KitchenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A299ED82D81F15603BD430 /* KitchenBuilder.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0A1C3B1FBED58E7734FA8056 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		0A9FCA733785353DAB634DC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		12849E6B13142B777C193818 /* HighScoreScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighScoreScene.swift; sourceTree = "<group>"; };
+		169EF2FC678D0A82EAD61F6F /* PhysicsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsCategory.swift; sourceTree = "<group>"; };
+		5B99152FF9B434C27F1FA718 /* BurgerBanditApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurgerBanditApp.swift; sourceTree = "<group>"; };
+		5EE16A23B42634FAB6A989AF /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		80840C0B2A2AC329ACBA3661 /* GameOverScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
+		81F2799AA1B68B99E72CE22F /* FoodNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodNode.swift; sourceTree = "<group>"; };
+		8BFD15C2DCD696FD530FDE31 /* HUDNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDNode.swift; sourceTree = "<group>"; };
+		97B595D8430503D6DD0E3944 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A530478CA04EEC2EA79C52DC /* MusicManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicManager.swift; sourceTree = "<group>"; };
+		A54825A21722AFE4E7249408 /* Restaurant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant.swift; sourceTree = "<group>"; };
+		B6A299ED82D81F15603BD430 /* KitchenBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KitchenBuilder.swift; sourceTree = "<group>"; };
+		B6A563EFBC8B48D79741B263 /* MainMenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuScene.swift; sourceTree = "<group>"; };
+		BF3FDD01711BEDE1C37F3E01 /* HighScoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighScoreManager.swift; sourceTree = "<group>"; };
+		C95BB49C552C053417E58FC0 /* GuardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuardNode.swift; sourceTree = "<group>"; };
+		CAA11AB615AD14A36979AFA2 /* FoodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodType.swift; sourceTree = "<group>"; };
+		D7909F4126839B935DF8B9F1 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		DC3626BB1E63B0F6ED6DCCE7 /* PlayerNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerNode.swift; sourceTree = "<group>"; };
+		FB5A743C09D5B5825C49FB89 /* BurgerBandit.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BurgerBandit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		03C17244BA54E77D6F6F3904 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				80840C0B2A2AC329ACBA3661 /* GameOverScene.swift */,
+				0A1C3B1FBED58E7734FA8056 /* GameScene.swift */,
+				12849E6B13142B777C193818 /* HighScoreScene.swift */,
+				B6A563EFBC8B48D79741B263 /* MainMenuScene.swift */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		3F85A3B78B55D9B650099790 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FB5A743C09D5B5825C49FB89 /* BurgerBandit.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AFCC42755180DF6AAE5D544B /* BurgerBandit */ = {
+			isa = PBXGroup;
+			children = (
+				97B595D8430503D6DD0E3944 /* Assets.xcassets */,
+				5B99152FF9B434C27F1FA718 /* BurgerBanditApp.swift */,
+				D7909F4126839B935DF8B9F1 /* GameViewController.swift */,
+				0A9FCA733785353DAB634DC0 /* Info.plist */,
+				C4494AA5C47D4DF933240443 /* Models */,
+				C4617993BB51224A16273262 /* Nodes */,
+				03C17244BA54E77D6F6F3904 /* Scenes */,
+			);
+			path = BurgerBandit;
+			sourceTree = "<group>";
+		};
+		C4494AA5C47D4DF933240443 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CAA11AB615AD14A36979AFA2 /* FoodType.swift */,
+				5EE16A23B42634FAB6A989AF /* GameState.swift */,
+				BF3FDD01711BEDE1C37F3E01 /* HighScoreManager.swift */,
+				A530478CA04EEC2EA79C52DC /* MusicManager.swift */,
+				169EF2FC678D0A82EAD61F6F /* PhysicsCategory.swift */,
+				A54825A21722AFE4E7249408 /* Restaurant.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C4617993BB51224A16273262 /* Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				81F2799AA1B68B99E72CE22F /* FoodNode.swift */,
+				C95BB49C552C053417E58FC0 /* GuardNode.swift */,
+				8BFD15C2DCD696FD530FDE31 /* HUDNode.swift */,
+				B6A299ED82D81F15603BD430 /* KitchenBuilder.swift */,
+				DC3626BB1E63B0F6ED6DCCE7 /* PlayerNode.swift */,
+			);
+			path = Nodes;
+			sourceTree = "<group>";
+		};
+		D7DA590C734CED156C19D2EC = {
+			isa = PBXGroup;
+			children = (
+				AFCC42755180DF6AAE5D544B /* BurgerBandit */,
+				3F85A3B78B55D9B650099790 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		22A656570A6908D2733029DF /* BurgerBandit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9F980A3E1890356F14E6ADB6 /* Build configuration list for PBXNativeTarget "BurgerBandit" */;
+			buildPhases = (
+				40912A821010219100C4049A /* Sources */,
+				AD64E2FE8F78C2645DFDE0C4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BurgerBandit;
+			packageProductDependencies = (
+			);
+			productName = BurgerBandit;
+			productReference = FB5A743C09D5B5825C49FB89 /* BurgerBandit.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F81777402F6938B7067AAE01 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					22A656570A6908D2733029DF = {
+						DevelopmentTeam = C624J4S2F8;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = E8BF1476A6F71F63F3A73AD1 /* Build configuration list for PBXProject "BurgerBandit" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D7DA590C734CED156C19D2EC;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 3F85A3B78B55D9B650099790 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				22A656570A6908D2733029DF /* BurgerBandit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AD64E2FE8F78C2645DFDE0C4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				581D4D3E07439AF1065A47A2 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		40912A821010219100C4049A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C8842350C7E870D9B73C37DF /* BurgerBanditApp.swift in Sources */,
+				22721B04B1B9285BD935B1F9 /* FoodNode.swift in Sources */,
+				077F858D66C9F6D61C4D5A51 /* FoodType.swift in Sources */,
+				360C65B9FDC9114DDD09C2AB /* GameOverScene.swift in Sources */,
+				0E365A13758AE9CB1E690D80 /* GameScene.swift in Sources */,
+				3E5734675F6007235A930694 /* GameState.swift in Sources */,
+				1CD9AE25C95262CEC9FC4A8B /* GameViewController.swift in Sources */,
+				046672E97A375AD83B530F16 /* GuardNode.swift in Sources */,
+				B0F42417B6671B853070FF8B /* HUDNode.swift in Sources */,
+				8B684A7E472AB7996AE50CA0 /* HighScoreManager.swift in Sources */,
+				0923D840F6E9AE9779D57DF5 /* HighScoreScene.swift in Sources */,
+				D84593CED115DC2F701E617B /* KitchenBuilder.swift in Sources */,
+				9051EC7C8930184E192E8DFB /* MainMenuScene.swift in Sources */,
+				C6BD9FD7477706BF33305E25 /* MusicManager.swift in Sources */,
+				7DF7423CD37774F33E8C1CA8 /* PhysicsCategory.swift in Sources */,
+				AC78B4057C80B3A8FA275DB5 /* PlayerNode.swift in Sources */,
+				2DA031EFF4F8F5AE2C99A139 /* Restaurant.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		6AC0476104191E9FBD273154 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		742FC9EA649A1460979EBF7B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		8FE89231E80DF2F13DFF519D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = C624J4S2F8;
+				INFOPLIST_FILE = BurgerBandit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.3.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.agilelens.BurgerBandit;
+				SDKROOT = iphoneos;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FD0B384573D05EBADBA82B0A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = C624J4S2F8;
+				INFOPLIST_FILE = BurgerBandit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.3.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.agilelens.BurgerBandit;
+				SDKROOT = iphoneos;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9F980A3E1890356F14E6ADB6 /* Build configuration list for PBXNativeTarget "BurgerBandit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FD0B384573D05EBADBA82B0A /* Debug */,
+				8FE89231E80DF2F13DFF519D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E8BF1476A6F71F63F3A73AD1 /* Build configuration list for PBXProject "BurgerBandit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AC0476104191E9FBD273154 /* Debug */,
+				742FC9EA649A1460979EBF7B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F81777402F6938B7067AAE01 /* Project object */;
+}

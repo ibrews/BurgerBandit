@@ -1,0 +1,6 @@
+# BurgerBandit.xcodeproj
+DerivedData/
+*.xcuserstate
+xcuserdata/
+.build/
+*.ipa
