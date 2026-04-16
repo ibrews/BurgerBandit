@@ -61,6 +61,14 @@ Restaurants are connected by side doors, so you can sneak between them during a 
 - **Build:** XcodeGen (`project.yml`)
 - **Version:** 0.3.0
 
+## Things to Try
+
+1. **Launch the game and start a heist at Burger Barn** — use the virtual joystick to run into burgers and watch your character's belly grow visually between each fat stage; the collision radius expands as you get fatter.
+2. **Keep eating until you reach the final fat stage** — an 8-second countdown timer appears on screen; sprint for the exit door before it hits zero or the guards will catch you instantly.
+3. **Find a rare veggie pickup (green glow)** — your burglar flashes green, speed fully restores, and a portion of health refills; worth hunting even though the burglar hates vegetables.
+4. **Let a guard spot you and trigger chase mode** — dynamic music switches to the chase track, the guard's alert indicator appears above their head, and they path toward you; outrun them back past the patrol boundary to end the chase.
+5. **Unlock all four restaurants by completing a heist at each one** — each has a unique kitchen layout, guard patrol pattern, food specialty, and color scheme; compare high scores across difficulty levels.
+
 ## Building
 
 ```bash
