@@ -599,7 +599,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let state = GameState.shared
         let isLeft = doorNode.name == "doorLeft"
         let target = isLeft ? restaurant.leftNeighbor : restaurant.rightNeighbor
-        guard let nextRestaurant = target else { return }
+        guard let nextRestaurant = target else {
+            isTransitioning = false
+            return
+        }
 
         MusicManager.shared.stopAlarm()
 

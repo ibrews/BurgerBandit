@@ -24,7 +24,7 @@ Restaurants are connected by side doors, so you can sneak between them during a 
 - **Virtual joystick** controls -- touch anywhere to move your burglar around the kitchen
 - **Grab food** by running into it. Raw ingredients (patties, buns, condiments) are worth less. Finished food (burgers, fries, chicken, drinks) is worth more -- but makes you fatter faster
 - **Dodge the guards** -- they patrol the kitchen and will chase you if you get too close. Getting caught deals health damage. Lose all your health and you lose a life. Lose all three lives and it's game over: **arrested**
-- **Veggies** are super rare but heal you and give a speed boost (the burglar does NOT want to eat vegetables, but sometimes you gotta)
+- **Veggies** are super rare but heal you and give a big speed boost (the burglar does NOT want to eat vegetables, but sometimes you gotta)
 - **Fat stages** -- as you eat, you grow through 4 stages of fatness. Your character visually expands, belly rolls appear, and your speed drops from full sprint to a sad waddle. At the final fat stage, an 8-second timer starts -- escape or get caught!
 
 ## Features
@@ -65,9 +65,9 @@ Restaurants are connected by side doors, so you can sneak between them during a 
 
 1. **Launch the game and start a heist at Burger Barn** — use the virtual joystick to run into burgers and watch your character's belly grow visually between each fat stage; the collision radius expands as you get fatter.
 2. **Keep eating until you reach the final fat stage** — an 8-second countdown timer appears on screen; sprint for the exit door before it hits zero or the guards will catch you instantly.
-3. **Find a rare veggie pickup (green glow)** — your burglar flashes green, speed fully restores, and a portion of health refills; worth hunting even though the burglar hates vegetables.
+3. **Find a rare veggie pickup (green glow)** — your burglar flashes green, gets a big speed boost, and a portion of health refills; worth hunting even though the burglar hates vegetables.
 4. **Let a guard spot you and trigger chase mode** — dynamic music switches to the chase track, the guard's alert indicator appears above their head, and they path toward you; outrun them back past the patrol boundary to end the chase.
-5. **Unlock all four restaurants by completing a heist at each one** — each has a unique kitchen layout, guard patrol pattern, food specialty, and color scheme; compare high scores across difficulty levels.
+5. **Pick a different restaurant from the main menu and compare** — each of the four is playable from the start, with its own kitchen layout, guard patrol pattern, food specialty, and color scheme; compare high scores across difficulty levels.
 
 ## Building
 
