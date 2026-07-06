@@ -21,19 +21,66 @@ enum Difficulty: String, CaseIterable {
         }
     }
 
+    // Player's base (slim) speed is 200 — see GameScene.baseSpeed.
+    // Easy: stays below the player's speed until fat stage 3 (~70), so you can
+    // always outrun an easy guard until you're very fat. Hard: matches the
+    // player's stage-0 speed exactly, so a spotted chase is a fair coin flip
+    // from the very first bite.
     var guardBaseSpeed: CGFloat {
         switch self {
-        case .easy:   return 120
-        case .medium: return 160
+        case .easy:   return 100
+        case .medium: return 150
         case .hard:   return 200
         }
     }
 
+    // Max sight distance — only relevant within the guard's view cone AND
+    // with a clear line of sight (see GameScene.hasLineOfSight).
     var chaseDistance: CGFloat {
         switch self {
-        case .easy:   return 160
-        case .medium: return 220
+        case .easy:   return 180
+        case .medium: return 240
         case .hard:   return 320
+        }
+    }
+
+    // Half-angle of the guard's forward view cone, in degrees. Kept narrow at
+    // every difficulty — this is what makes "stay out of the cone" a real
+    // stealth mechanic instead of "stay N units away."
+    var viewConeHalfAngleDegrees: CGFloat {
+        switch self {
+        case .easy:   return 22
+        case .medium: return 27
+        case .hard:   return 32
+        }
+    }
+
+    // Chance, each time a guard finishes a scan period, that it gets
+    // distracted (looks at a fixed prop instead of scanning) rather than
+    // immediately scanning again.
+    var distractionChance: Double {
+        switch self {
+        case .easy:   return 0.75
+        case .medium: return 0.4
+        case .hard:   return 0.12
+        }
+    }
+
+    // How long a distraction lasts once triggered.
+    var distractionDuration: ClosedRange<TimeInterval> {
+        switch self {
+        case .easy:   return 3.0...6.0
+        case .medium: return 2.0...4.0
+        case .hard:   return 1.0...2.0
+        }
+    }
+
+    // How long a guard actively scans before its next distraction roll.
+    var scanDuration: ClosedRange<TimeInterval> {
+        switch self {
+        case .easy:   return 1.5...3.0
+        case .medium: return 2.5...4.5
+        case .hard:   return 3.5...6.0
         }
     }
 

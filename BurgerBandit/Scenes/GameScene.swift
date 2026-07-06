@@ -101,6 +101,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         currentFatStage = 0
     }
 
+    // Guards can't spot the player for this long after a level loads, no
+    // matter what the cone/LOS math says — a level should never open with
+    // an instant catch.
+    private static let startGracePeriod: TimeInterval = 1.5
+
     private func buildGuards() {
         let state = GameState.shared
         let diff = state.difficulty
@@ -112,13 +117,91 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 uniformColor: restaurant.guardUniformColor,
                 moveSpeed: diff.guardBaseSpeed,
                 chaseDistance: diff.chaseDistance,
-                patrolPath: patrolPath
+                patrolPath: patrolPath,
+                viewConeHalfAngleDegrees: diff.viewConeHalfAngleDegrees,
+                distractionChance: diff.distractionChance,
+                distractionDuration: diff.distractionDuration,
+                scanDuration: diff.scanDuration
             )
             guard_.position = layout.guardStarts[i]
             guard_.zPosition = 9
+            guard_.graceTimer = Self.startGracePeriod
             addChild(guard_)
             guards.append(guard_)
         }
+    }
+
+    /// True if nothing in `layout`'s walls/counters/serving counters, or any
+    /// currently-active food item, blocks the straight line between two
+    /// points — a table, a wall, or a burger left on the counter all work as
+    /// sightline cover.
+    private func hasLineOfSight(from: CGPoint, to: CGPoint) -> Bool {
+        for rect in layout.wallRects where segment(from, to, intersects: rect) { return false }
+        for rect in layout.counterRects where segment(from, to, intersects: rect) { return false }
+        for rect in layout.servingRects where segment(from, to, intersects: rect) { return false }
+        for food in foodNodes where segment(from, to, passesNear: food.position, radius: 22) { return false }
+        return true
+    }
+
+    /// Slab-method segment/AABB intersection test.
+    private func segment(_ p0: CGPoint, _ p1: CGPoint, intersects rect: CGRect) -> Bool {
+        var tMin: CGFloat = 0, tMax: CGFloat = 1
+        let d = CGPoint(x: p1.x - p0.x, y: p1.y - p0.y)
+
+        for axis in 0..<2 {
+            let origin = axis == 0 ? p0.x : p0.y
+            let delta = axis == 0 ? d.x : d.y
+            let lo = axis == 0 ? rect.minX : rect.minY
+            let hi = axis == 0 ? rect.maxX : rect.maxY
+
+            if abs(delta) < 1e-6 {
+                if origin < lo || origin > hi { return false }
+            } else {
+                var t0 = (lo - origin) / delta
+                var t1 = (hi - origin) / delta
+                if t0 > t1 { swap(&t0, &t1) }
+                tMin = max(tMin, t0)
+                tMax = min(tMax, t1)
+                if tMin > tMax { return false }
+            }
+        }
+        return true
+    }
+
+    /// Point-to-segment distance test, for treating food items as small
+    /// circular sightline obstructions.
+    private func segment(_ p0: CGPoint, _ p1: CGPoint, passesNear point: CGPoint, radius: CGFloat) -> Bool {
+        let dx = p1.x - p0.x
+        let dy = p1.y - p0.y
+        let lengthSquared = dx * dx + dy * dy
+        guard lengthSquared > 1e-6 else { return false }
+        var t = ((point.x - p0.x) * dx + (point.y - p0.y) * dy) / lengthSquared
+        t = max(0, min(1, t))
+        let closestX = p0.x + t * dx
+        let closestY = p0.y + t * dy
+        let distX = point.x - closestX
+        let distY = point.y - closestY
+        return (distX * distX + distY * distY) < (radius * radius)
+    }
+
+    /// Range + cone + line-of-sight + not-distracted. This is the single
+    /// source of truth for "can this guard see the player right now" —
+    /// GuardNode itself doesn't have access to level geometry.
+    private func guardCanSeePlayer(_ guard_: GuardNode) -> Bool {
+        guard guard_.graceTimer <= 0, !guard_.isDistracted else { return false }
+
+        let dx = player.position.x - guard_.position.x
+        let dy = player.position.y - guard_.position.y
+        let dist = sqrt(dx * dx + dy * dy)
+        guard dist <= guard_.sightRange else { return false }
+
+        let angleToPlayer = atan2(dy, dx)
+        var diff = angleToPlayer - guard_.worldFacingAngle
+        while diff > .pi { diff -= 2 * .pi }
+        while diff < -.pi { diff += 2 * .pi }
+        guard abs(diff) <= guard_.viewConeHalfAngle else { return false }
+
+        return hasLineOfSight(from: guard_.position, to: player.position)
     }
 
     private func buildHUD() {
@@ -266,7 +349,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Guard AI + chase music + distance-based catch detection
         var chasing = false
         for guard_ in guards {
-            guard_.update(playerPosition: player.position, dt: dt)
+            let spotted = guardCanSeePlayer(guard_)
+            guard_.update(playerPosition: player.position, spotted: spotted, dt: dt)
             if guard_.isChasing { chasing = true }
 
             // Distance-based guard catch (replaces physics contact)

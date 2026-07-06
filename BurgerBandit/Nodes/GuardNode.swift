@@ -2,17 +2,42 @@ import SpriteKit
 
 class GuardNode: SKNode {
 
+    private enum State {
+        case patrol      // walking the patrol path, actively scanning
+        case distracted  // stopped, looking at a fixed prop, can't spot the player
+        case chasing     // actively moving toward a spotted player
+    }
+
     let uniformColor: UIColor
     var moveSpeed: CGFloat
-    var chaseDistance: CGFloat
+    var sightRange: CGFloat
+    var viewConeHalfAngle: CGFloat   // radians
+    var distractionChance: Double
+    var distractionDuration: ClosedRange<TimeInterval>
+    var scanDuration: ClosedRange<TimeInterval>
     var patrolPath: [CGPoint]
+
     private var patrolIndex: Int = 0
     private(set) var isChasing: Bool = false
+    private(set) var isDistracted: Bool = false
     var stunTimer: TimeInterval = 0
+    /// Forces isDistracted for a startup window so guards can never spot the
+    /// player the instant a level loads, regardless of cone/LOS math.
+    var graceTimer: TimeInterval = 0
+
+    private var state: State = .patrol
+    private var stateTimer: TimeInterval = 0
+
     private var bodyNode: SKShapeNode!
     private var headNode: SKShapeNode!
     private var alertNode: SKNode!
+    private var distractionIconNode: SKLabelNode!
+    private var visionCone: SKShapeNode!
+
+    // zRotation; world-space forward direction is `facingAngle + .pi/2`
+    // (matches the -90° offset baked into the character art's local +y "up").
     private var facingAngle: CGFloat = 0
+    var worldFacingAngle: CGFloat { facingAngle + .pi / 2 }
 
     // Play area bounds
     static let boundsMinX: CGFloat = -380
@@ -20,22 +45,38 @@ class GuardNode: SKNode {
     static let boundsMinY: CGFloat = -145
     static let boundsMaxY: CGFloat = 140
 
-    // Collision radius for distance-based detection
+    // Collision radius for distance-based "bumped into a guard" catch —
+    // independent of vision, always active (even mid-distraction).
     static let catchRadius: CGFloat = 28
 
-    init(uniformColor: UIColor, moveSpeed: CGFloat, chaseDistance: CGFloat, patrolPath: [CGPoint]) {
+    private static let distractionFlavors = ["📱", "📺", "🧱"]
+
+    init(uniformColor: UIColor, moveSpeed: CGFloat, chaseDistance: CGFloat, patrolPath: [CGPoint],
+         viewConeHalfAngleDegrees: CGFloat = 28, distractionChance: Double = 0.4,
+         distractionDuration: ClosedRange<TimeInterval> = 2.0...4.0,
+         scanDuration: ClosedRange<TimeInterval> = 2.5...4.5) {
         self.uniformColor = uniformColor
         self.moveSpeed = moveSpeed
-        self.chaseDistance = chaseDistance
+        self.sightRange = chaseDistance
+        self.viewConeHalfAngle = viewConeHalfAngleDegrees * .pi / 180
+        self.distractionChance = distractionChance
+        self.distractionDuration = distractionDuration
+        self.scanDuration = scanDuration
         self.patrolPath = patrolPath
         super.init()
         buildCharacter()
+        stateTimer = Double.random(in: scanDuration)
         // NO physics body — collision is distance-based in GameScene
     }
 
     required init?(coder aDecoder: NSCoder) { fatalError() }
 
     private func buildCharacter() {
+        // Vision cone — drawn first so it renders under the body/head.
+        visionCone = buildVisionCone()
+        visionCone.zPosition = -0.5
+        addChild(visionCone)
+
         // Guard body — top-down square silhouette
         let bodySize = CGSize(width: 36, height: 36)
         let bodyPath = UIBezierPath(roundedRect: CGRect(origin: CGPoint(x: -18, y: -18), size: bodySize), cornerRadius: 6)
@@ -110,6 +151,35 @@ class GuardNode: SKNode {
         alertNode.position = CGPoint(x: 0, y: 32)
         alertNode.zPosition = 10
         addChild(alertNode)
+
+        // Distraction icon (phone/TV/wall — shown while distracted)
+        distractionIconNode = SKLabelNode(text: Self.distractionFlavors[0])
+        distractionIconNode.fontSize = 20
+        distractionIconNode.verticalAlignmentMode = .center
+        distractionIconNode.horizontalAlignmentMode = .center
+        distractionIconNode.position = CGPoint(x: 0, y: 32)
+        distractionIconNode.zPosition = 10
+        distractionIconNode.isHidden = true
+        addChild(distractionIconNode)
+    }
+
+    private func buildVisionCone() -> SKShapeNode {
+        // A pie slice pointing in local +y ("up"), matching how the body/head
+        // are authored — so it automatically tracks facingAngle via zRotation.
+        let path = CGMutablePath()
+        path.move(to: .zero)
+        let steps = 12
+        for i in 0...steps {
+            let t = CGFloat(i) / CGFloat(steps)
+            let angle = (-viewConeHalfAngle) + t * (2 * viewConeHalfAngle) + .pi / 2
+            path.addLine(to: CGPoint(x: cos(angle) * sightRange, y: sin(angle) * sightRange))
+        }
+        path.closeSubpath()
+        let cone = SKShapeNode(path: path)
+        cone.fillColor = UIColor(red: 1.0, green: 0.9, blue: 0.3, alpha: 0.16)
+        cone.strokeColor = UIColor(red: 1.0, green: 0.9, blue: 0.3, alpha: 0.3)
+        cone.lineWidth = 1.5
+        return cone
     }
 
     private func addAngryEyebrows() {
@@ -130,7 +200,6 @@ class GuardNode: SKNode {
         rightBrow.strokeColor = UIColor(red: 0.25, green: 0.15, blue: 0.05, alpha: 1)
         rightBrow.lineWidth = 2.5
         rightBrow.lineCap = .round
-        rightBrow.zPosition = 4
         headNode.addChild(rightBrow)
     }
 
@@ -151,23 +220,28 @@ class GuardNode: SKNode {
         return container
     }
 
-    // Called every frame from GameScene
-    func update(playerPosition: CGPoint, dt: TimeInterval) {
+    /// GameScene owns level geometry and the player's position, so it decides
+    /// whether this guard can actually SEE the player right now (range + cone
+    /// + line-of-sight + not-distracted) and passes the verdict in as
+    /// `spotted`. This node only owns movement, patrol, and the
+    /// distraction/scan state machine.
+    func update(playerPosition: CGPoint, spotted: Bool, dt: TimeInterval) {
         if stunTimer > 0 {
             stunTimer -= dt
             return
         }
-
-        let dx = playerPosition.x - position.x
-        let dy = playerPosition.y - position.y
-        let dist = sqrt(dx * dx + dy * dy)
+        if graceTimer > 0 {
+            graceTimer -= dt
+        }
 
         let wasChasing = isChasing
-        isChasing = dist < chaseDistance
+        isChasing = spotted
 
         if isChasing != wasChasing {
             alertNode.isHidden = !isChasing
             if isChasing {
+                // Being spotted-and-chasing always interrupts a distraction.
+                setDistracted(false)
                 alertNode.setScale(0)
                 alertNode.run(SKAction.sequence([
                     SKAction.scale(to: 1.3, duration: 0.1),
@@ -177,12 +251,49 @@ class GuardNode: SKNode {
         }
 
         if isChasing {
+            let dx = playerPosition.x - position.x
+            let dy = playerPosition.y - position.y
+            let dist = sqrt(dx * dx + dy * dy)
             moveToward(playerPosition: playerPosition, dist: dist, dt: dt)
         } else {
-            patrol(dt: dt)
+            updateScanState(dt: dt)
+            if isDistracted || graceTimer > 0 {
+                // Standing still, looking at the fixed prop — no movement.
+            } else {
+                patrol(dt: dt)
+            }
         }
 
         clampToBounds()
+    }
+
+    private func updateScanState(dt: TimeInterval) {
+        stateTimer -= dt
+        guard stateTimer <= 0 else { return }
+
+        if isDistracted {
+            setDistracted(false)
+            stateTimer = Double.random(in: scanDuration)
+        } else {
+            if Double.random(in: 0...1) < distractionChance {
+                setDistracted(true)
+                stateTimer = Double.random(in: distractionDuration)
+            } else {
+                // Stay scanning a little longer instead of rolling every tick.
+                stateTimer = Double.random(in: scanDuration)
+            }
+        }
+    }
+
+    private func setDistracted(_ distracted: Bool) {
+        isDistracted = distracted
+        distractionIconNode.isHidden = !distracted
+        if distracted {
+            distractionIconNode.text = Self.distractionFlavors.randomElement()
+            // Look at a fixed, arbitrary world direction — "not looking at you."
+            let targetWorld = CGFloat.random(in: 0..<(2 * .pi))
+            rotateFacing(towardWorldAngle: targetWorld, dt: 1.0) // snap immediately
+        }
     }
 
     private func moveToward(playerPosition: CGPoint, dist: CGFloat, dt: TimeInterval) {
@@ -197,7 +308,7 @@ class GuardNode: SKNode {
         position.x += nx * step
         position.y += ny * step
 
-        smoothRotate(nx: nx, ny: ny, dt: dt)
+        rotateFacing(towardWorldAngle: atan2(ny, nx), dt: dt)
     }
 
     private func patrol(dt: TimeInterval) {
@@ -218,11 +329,13 @@ class GuardNode: SKNode {
         position.x += nx * step
         position.y += ny * step
 
-        smoothRotate(nx: nx, ny: ny, dt: dt)
+        rotateFacing(towardWorldAngle: atan2(ny, nx), dt: dt)
     }
 
-    private func smoothRotate(nx: CGFloat, ny: CGFloat, dt: TimeInterval) {
-        let targetAngle = atan2(ny, nx) - .pi / 2
+    /// `worldAngle` is a true world-space direction (0 = +x). Converts to the
+    /// -90°-offset `facingAngle`/`zRotation` convention the character art uses.
+    private func rotateFacing(towardWorldAngle worldAngle: CGFloat, dt: TimeInterval) {
+        let targetAngle = worldAngle - .pi / 2
         var diff = targetAngle - facingAngle
         while diff > .pi { diff -= 2 * .pi }
         while diff < -.pi { diff += 2 * .pi }
