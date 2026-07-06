@@ -6,3 +6,4 @@ xcuserdata/
 *.ipa
 build/
 build_sim/
+build_device/
