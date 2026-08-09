@@ -80,3 +80,7 @@ open BurgerBandit.xcodeproj
 ```
 
 Build and run on an iOS 17+ device or simulator in landscape orientation.
+
+## Support
+
+If you like seeing this kind of thing get built and shared, [donations are always welcome](https://www.alexcoulombepresents.com/support) — they buy hardware, render time, and the freedom to keep giving most of this away.
